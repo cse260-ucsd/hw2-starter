@@ -13,6 +13,10 @@ C++FLAGS += -DTARGET_T4
 CFLAGS += -DTARGET_T4
 NVCCFLAGS += -DTARGET_T4 
 
+ifeq ($(static_smem), 1)
+	NVCCFLAGS += -DSTATIC_SHARED_MEM
+endif
+
 # Set cublastest=1 to build the variant that uses cuBLAS
 # By default, build the code to use student written kernel
 ifeq ($(cublastest), 1)

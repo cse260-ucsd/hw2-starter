@@ -223,12 +223,14 @@ int main(int argc, char **argv)
     cudaFuncSetCacheConfig(matMul, Preference);
 
     #ifdef TARGET_T4
+    #ifndef STATIC_SHARED_MEM
     cudaFuncSetAttribute(matMul, cudaFuncAttributePreferredSharedMemoryCarveout,
 			 cudaSharedmemCarveoutMaxShared);
     checkCUDAError("Error seting shared memory to 64K carveout");
     cudaFuncSetAttribute(matMul, cudaFuncAttributeMaxDynamicSharedMemorySize,
 			 1024 * 64);
     checkCUDAError("Error seting shared memory to 64K");
+    #endif
     #endif
 
 
@@ -261,7 +263,11 @@ int main(int argc, char **argv)
 #else // !CUBLAS_TEST
     for (int r = 0; r < SCALE * reps; r++)
         #ifdef TARGET_T4
+        #ifndef STATIC_SHARED_MEM
             matMul<<<grid, threads, 64 *1024>>>(n, d_C, d_A, d_B);
+        #else
+            matMul<<<grid, threads>>>(n, d_C, d_A, d_B);
+        #endif
         #endif
 #endif
 
@@ -292,7 +298,11 @@ int main(int argc, char **argv)
     cudaMemset((void **)d_C, 0, n2);
     checkCUDAError("Error clearing device memory matrix C");
     #ifdef TARGET_T4
+    #ifndef STATIC_SHARED_MEM
     matMul<<<grid, threads, 64 * 1024>>>(n, d_C, d_A, d_B);
+    #else
+    matMul<<<grid, threads>>>(n, d_C, d_A, d_B);
+    #endif
     #endif
     cudaDeviceSynchronize();
     checkCUDAError("Error in matrixMul kernel");
