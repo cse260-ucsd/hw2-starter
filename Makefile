@@ -13,6 +13,8 @@ C++FLAGS += -DTARGET_T4
 CFLAGS += -DTARGET_T4
 NVCCFLAGS += -DTARGET_T4 
 
+# Set static_smem=1 to build the variant that uses static shared memory
+# By default, build the code to use dynamic shared memory
 ifeq ($(static_smem), 1)
 	NVCCFLAGS += -DSTATIC_SHARED_MEM
 endif
@@ -23,15 +25,7 @@ ifeq ($(cublastest), 1)
     C++FLAGS += -DCUBLAS_TEST
     CFLAGS += -DCUBLAS_TEST
     NVCCFLAGS += -DCUBLAS_TEST
-endif  
-
-# Set usecache=1 to build the variant that uses cache
-# By default, build the code to use shared memory
-ifeq ($(usecache), 1)
-    C++FLAGS += -DUSE_CACHE
-    CFLAGS += -DUSE_CACHE
-    NVCCFLAGS += -DUSE_CACHE
-endif   
+endif
 
 # Set gprof=1 on make command line to compile for gprof
 ifeq ($(gprof), 1)
