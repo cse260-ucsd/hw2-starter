@@ -19,6 +19,13 @@ ifeq ($(static_smem), 1)
 	NVCCFLAGS += -DSTATIC_SHARED_MEM
 endif
 
+# Set dynamic_smem=<value> to use a specific size of dynamic shared memory
+# By default, the code uses 64KiB of dynamic shared memory
+# dynamic_smem=32 would set the dynamic shared memory size to 32KiB
+ifdef dynamic_smem
+	NVCCFLAGS += -DDYNAMIC_SHARED_MEM_SIZE=$(dynamic_smem)
+endif
+
 # Set cublastest=1 to build the variant that uses cuBLAS
 # By default, build the code to use student written kernel
 ifeq ($(cublastest), 1)

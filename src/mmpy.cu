@@ -226,10 +226,10 @@ int main(int argc, char **argv)
     #ifndef STATIC_SHARED_MEM
     cudaFuncSetAttribute(matMul, cudaFuncAttributePreferredSharedMemoryCarveout,
 			 cudaSharedmemCarveoutMaxShared);
-    checkCUDAError("Error seting shared memory to 64K carveout");
+    checkCUDAError("Error seting shared memory carveout to maximum shared");
     cudaFuncSetAttribute(matMul, cudaFuncAttributeMaxDynamicSharedMemorySize,
-			 1024 * 64);
-    checkCUDAError("Error seting shared memory to 64K");
+			 1024 * DYNAMIC_SHARED_MEM_SIZE);
+    checkCUDAError("Error seting shared memory to DYNAMIC_SHARED_MEM_SIZE");
     #endif
     #endif
 
@@ -264,7 +264,7 @@ int main(int argc, char **argv)
     for (int r = 0; r < SCALE * reps; r++)
         #ifdef TARGET_T4
         #ifndef STATIC_SHARED_MEM
-            matMul<<<grid, threads, 64 *1024>>>(n, d_C, d_A, d_B);
+            matMul<<<grid, threads, 1024 * DYNAMIC_SHARED_MEM_SIZE>>>(n, d_C, d_A, d_B);
         #else
             matMul<<<grid, threads>>>(n, d_C, d_A, d_B);
         #endif
@@ -299,7 +299,7 @@ int main(int argc, char **argv)
     checkCUDAError("Error clearing device memory matrix C");
     #ifdef TARGET_T4
     #ifndef STATIC_SHARED_MEM
-    matMul<<<grid, threads, 64 * 1024>>>(n, d_C, d_A, d_B);
+    matMul<<<grid, threads, 1024 * DYNAMIC_SHARED_MEM_SIZE>>>(n, d_C, d_A, d_B);
     #else
     matMul<<<grid, threads>>>(n, d_C, d_A, d_B);
     #endif
