@@ -25,7 +25,7 @@ make clean
 > On the AWS g4dn.xlarge instance run the following command before running any experiments. It sets fixed GPU clock rates to ensure consistent performance
 > ```bash
 > sudo nvidia-smi -pm 1
-> sudo nvidia-smi -ac 5001,1590
+> sudo nvidia-smi -lgc 1590
 > ```
 To Run:
 ```bash
